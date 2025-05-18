@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>連結 MetaMask 錢包</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"><i class="fa-solid fa-wallet"></i></div>
+                DApp Connect
+            </a>
+            <nav class="main-nav">
+                <a href="#" class="nav-link active">首頁</a>
+                <a href="#" class="nav-link">功能介紹</a>
+                <a href="#" class="nav-link">常見問題</a>
+                <a href="#" class="nav-link">關於我們</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-image">
+                    <div class="circle-decor circle-1"></div>
+                    <div class="circle-decor circle-2"></div>
+                    <div class="auth-image-content">
+                        <h1 class="auth-title">創建帳號 & 連結錢包</h1>
+                        <p class="auth-desc">一步完成註冊並連結 MetaMask 錢包，開始你的 Web3 之旅。</p>
+                        <ul class="auth-features">
+                            <li class="auth-feature">
+                                <div class="feature-icon"><i class="fa-solid fa-user-plus"></i></div>
+                                <span>簡單快速的註冊流程</span>
+                            </li>
+                            <li class="auth-feature">
+                                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <span>安全加密連線，保護你的資產</span>
+                            </li>
+                            <li class="auth-feature">
+                                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                                <span>快速交易，低手續費</span>
+                            </li>
+                            <li class="auth-feature">
+                                <div class="feature-icon"><i class="fa-solid fa-lock"></i></div>
+                                <span>你的密鑰，你的資產，完全掌控</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="auth-form-container">
+                    <div class="auth-tabs">
+                        <div class="auth-tab active" data-tab="login">登入</div>
+                        <div class="auth-tab" data-tab="register">註冊帳號</div>
+                    </div>
+                    <!-- 登入表單 -->
+                    <div class="auth-form login-form active">
+                        <form id="loginForm" autocomplete="off">
+                            <div class="form-group">
+                                <label class="form-label">電子郵件或用戶名稱</label>
+                                <input type="text" class="form-control" id="loginEmail" placeholder="輸入你的電子郵件或用戶名稱">
+                                <div class="form-error" style="display:none;">請輸入帳號</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">密碼</label>
+                                <div class="password-input-group">
+                                    <input type="password" class="form-control" id="loginPassword" placeholder="輸入你的密碼">
+                                    <button type="button" class="password-toggle">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-error" style="display:none;">請輸入密碼</div>
+                            </div>
+                            <div class="form-footer">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="remember">
+                                    <label for="remember">記住我</label>
+                                </div>
+                                <a href="#" class="forgot-password">忘記密碼？</a>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-full" style="padding: 14px; background-image: linear-gradient(135deg, #b199e7, #f1b4c5);">登入</button>
+                            </div>
+                            <div class="social-login">
+                                <div class="social-login-title">或使用其他方式登入</div>
+                                <div class="social-login-buttons">
+                                    <button type="button" class="social-btn social-btn-facebook"><i class="fa-brands fa-facebook-f"></i></button>
+                                    <button type="button" class="social-btn social-btn-google"><i class="fa-brands fa-google"></i></button>
+                                    <button type="button" class="social-btn social-btn-apple"><i class="fa-brands fa-apple"></i></button>
+                                    <button type="button" class="social-btn social-btn-line"><i class="fa-brands fa-line"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- 註冊表單 -->
+                    <div class="auth-form register-form">
+                        <form id="registerForm" autocomplete="off">
+                            <div class="form-group" style="text-align:center; margin-bottom:20px;">
+                                <img src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg" alt="MetaMask fox logo" style="width:80px; height:80px; border-radius:12px;">
+                                <h3 style="margin-top:10px; color:var(--dark);">註冊並連結 MetaMask</h3>
+                                <p style="color:var(--gray); font-size:14px; margin-top:5px;">創建帳號並連結錢包，一次完成</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">電子郵件</label>
+                                <input type="email" class="form-control" id="regEmail" placeholder="輸入你的電子郵件">
+                                <div class="form-error" style="display:none;">請輸入有效的電子郵件</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">密碼</label>
+                                <div class="password-input-group">
+                                    <input type="password" class="form-control" id="regPassword" placeholder="設定你的密碼">
+                                    <button type="button" class="password-toggle">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-error" style="display:none;">密碼至少 8 字</div>
+                            </div>
+                            <div class="form-group">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="terms">
+                                    <label for="terms">我同意服務條款和隱私政策</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button id="connectWallet" type="button" class="btn btn-primary btn-full" style="padding: 14px; background-image: linear-gradient(135deg, #b199e7, #f1b4c5);">
+                                    <i class="fa-solid fa-wallet" style="margin-right: 8px;"></i> 註冊並連結 MetaMask
+                                </button>
+                            </div>
+                            <div id="walletInfo" style="display:none; margin-top:20px; padding:15px; background-color:#f1f3f6; border-radius:12px;">
+                                <div style="color:#333;">錢包已連結：<span id="walletAddress" style="font-family:monospace; background:#fff; padding:2px 8px; border-radius:6px;"></span></div>
+                            </div>
+                            <div class="social-login">
+                                <div class="social-login-title">或使用其他方式</div>
+                                <div class="social-login-buttons">
+                                    <button type="button" class="social-btn social-btn-facebook"><i class="fa-brands fa-facebook-f"></i></button>
+                                    <button type="button" class="social-btn social-btn-google"><i class="fa-brands fa-google"></i></button>
+                                    <button type="button" class="social-btn social-btn-apple"><i class="fa-brands fa-apple"></i></button>
+                                    <button type="button" class="social-btn social-btn-line"><i class="fa-brands fa-line"></i></button>
+                                </div>
+                            </div>
+                            <div class="signup-terms">
+                                註冊並連結錢包即表示你同意我們的 <a href="#">服務條款</a> 和 <a href="#">隱私政策</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                &copy; 2025 DApp Connect. 保留所有權利。
+            </div>
+        </div>
+    </footer>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab 切換
+        document.querySelectorAll('.auth-tab').forEach((tab, idx) => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.auth-form')[idx].classList.add('active');
+            });
+        });
+
+        // 密碼顯示切換
+        document.querySelectorAll('.password-toggle').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const input = btn.parentElement.querySelector('input');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    btn.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
+                } else {
+                    input.type = 'password';
+                    btn.innerHTML = '<i class="fa-regular fa-eye"></i>';
+                }
+            });
+        });
+
+        // 登入表單送出
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+            const email = document.getElementById('loginEmail');
+            const emailErr = email.nextElementSibling;
+            if (!email.value.trim()) {
+                emailErr.style.display = '';
+                valid = false;
+            } else {
+                emailErr.style.display = 'none';
+            }
+            const pw = document.getElementById('loginPassword');
+            const pwErr = pw.parentElement.nextElementSibling;
+            if (!pw.value.trim()) {
+                pwErr.style.display = '';
+                valid = false;
+            } else {
+                pwErr.style.display = 'none';
+            }
+            if (valid) {
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // 登入後跳轉首頁
+                }, 600);
+            } else {
+                alert('請正確填寫所有欄位');
+            }
+        });
+
+        // 註冊表單 MetaMask 連結
+        const connectWalletBtn = document.getElementById('connectWallet');
+        const walletInfo = document.getElementById('walletInfo');
+        const walletAddress = document.getElementById('walletAddress');
+        connectWalletBtn.addEventListener('click', async function() {
+            // 基本欄位驗證
+            let valid = true;
+            const email = document.getElementById('regEmail');
+            const pw = document.getElementById('regPassword');
+            const terms = document.getElementById('terms');
+            const emailErr = email.nextElementSibling;
+            if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+                emailErr.style.display = '';
+                valid = false;
+            } else {
+                emailErr.style.display = 'none';
+            }
+            const pwErr = pw.parentElement.nextElementSibling;
+            if (!pw.value.trim() || pw.value.trim().length < 8) {
+                pwErr.style.display = '';
+                valid = false;
+            } else {
+                pwErr.style.display = 'none';
+            }
+            if (!terms.checked) {
+                alert('請同意服務條款和隱私政策');
+                valid = false;
+            }
+            if (!valid) return;
+
+            // 連接 MetaMask
+            if (typeof window.ethereum === 'undefined') {
+                alert('找不到 MetaMask，請安裝擴充套件');
+                return;
+            }
+            try {
+                connectWalletBtn.disabled = true;
+                connectWalletBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 連結中...';
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                if (accounts && accounts.length > 0) {
+                    walletAddress.textContent = accounts[0];
+                    walletInfo.style.display = 'block';
+                    // 連結成功自動跳轉首頁
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1200);
+                }
+            } catch (e) {
+                alert('MetaMask 連結失敗，請確認已登入');
+            } finally {
+                connectWalletBtn.disabled = false;
+                connectWalletBtn.innerHTML = '<i class="fa-solid fa-wallet" style="margin-right: 8px;"></i> 註冊並連結 MetaMask';
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('connectWallet').addEventListener('click', async function() {
+        if (typeof window.ethereum === 'undefined') {
+            alert('請安裝 MetaMask');
+            return;
+        }
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            alert('連結成功！！你的錢包地址：\n' + accounts[0]);
+            window.location.href = 'index.html';
+        } catch (e) {
+            alert('連結失敗或取消');
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

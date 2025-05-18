@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人中心 - NFT 交易平台</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 620px;
+            margin: 40px auto 32px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px #e0e0e040;
+            padding: 38px 40px 34px 40px;
+        }
+        .profile-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary-dark, #7e57c2);
+            letter-spacing: 1px;
+        }
+        .profile-section {
+            margin-bottom: 24px;
+        }
+        .profile-section h3 {
+            font-size: 20px; color: #444; margin-bottom: 8px; font-weight: bold;
+        }
+        .profile-info-row {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .profile-info-label {
+            color: #666; width: 85px; font-size: 15px; text-align: right;
+        }
+        .profile-info-value {
+            font-size: 16px; color: #333;
+        }
+        .profile-wallet-row {
+            background: #f8f6ff; padding: 14px 18px; border-radius: 7px;
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 8px; font-size: 15px;
+        }
+        .profile-avatar {
+            width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin-right: 18px;
+            border: 2px solid #dfd2ff; background: #faf7ff;
+        }
+        .btn-edit {
+            margin-left: 12px;
+            background: linear-gradient(135deg, #9575cd, #7e57c2);
+            color: #fff; border: none; padding: 6px 20px; border-radius: 7px; font-size: 15px; cursor: pointer;
+            transition: background 0.18s;
+        }
+        .btn-edit:hover { background: linear-gradient(135deg, #b39ddb, #7e57c2); }
+        .input-inline {
+            border-radius: 6px; border: 1px solid #c7b6ec; padding: 4px 10px; font-size: 15px; width: 170px;
+            margin-right: 8px;
+        }
+        .profile-divider {
+            border-top: 1px solid #eee; margin: 22px 0 18px 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><i class="fa-solid fa-wallet"></i></div>
+            NFT Exchange
+        </a>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">首頁</a>
+            <a href="trending.html" class="nav-link">熱門交易</a>
+            <a href="mycards.html" class="nav-link">我的卡片</a>
+            <a href="myfav.html" class="nav-link">我的收藏</a>
+            <a href="history.html" class="nav-link">交易歷史</a>
+            <a href="profile.html" class="nav-link active">個人中心</a>
+        </nav>
+        <button id="connectWalletBtn" class="btn btn-primary">
+            <i class="fa-solid fa-wallet" style="margin-right: 8px;"></i>連接錢包
+        </button>
+        <div id="connectedWallet" style="display: none; color: var(--primary); font-weight: 500; font-size: 14px;">
+            <i class="fa-solid fa-circle-check" style="margin-right: 5px; color: var(--success);"></i>
+            <span id="walletAddress">0x1234...5678</span>
+        </div>
+    </div>
+</header>
+
+<div class="profile-container">
+    <div class="profile-title">
+        <i class="fa-solid fa-user"></i> 個人中心
+    </div>
+    <!-- 基本資訊 -->
+    <div class="profile-section">
+        <h3><i class="fa-solid fa-address-card"></i> 基本資料</h3>
+        <div style="display: flex; align-items: center; margin-bottom:16px;">
+            <img id="profileAvatar" class="profile-avatar" src="https://randomuser.me/api/portraits/men/43.jpg" alt="大頭貼">
+            <div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">暱稱</div>
+                    <div class="profile-info-value" id="profileNickname">NFT玩家43</div>
+                    <button class="btn-edit" id="editNicknameBtn"><i class="fa-solid fa-pen"></i> 編輯</button>
+                </div>
+                <div class="profile-info-row">
+                    <div class="profile-info-label">Email</div>
+                    <div class="profile-info-value" id="profileEmail">nftuser43@email.com</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="profile-divider"></div>
+    <!-- 錢包資訊 -->
+    <div class="profile-section">
+        <h3><i class="fa-solid fa-wallet"></i> 錢包資訊</h3>
+        <div class="profile-wallet-row">
+            <i class="fa-brands fa-ethereum" style="font-size:20px;color:#7e57c2;"></i>
+            <span id="profileWalletAddr">尚未連接</span>
+            <span id="profileWalletStatus" style="color:#b39ddb;margin-left:5px;"></span>
+        </div>
+        <div class="profile-info-row">
+            <div class="profile-info-label">餘額</div>
+            <div class="profile-info-value" id="profileWalletBalance">-</div>
+        </div>
+    </div>
+    <div class="profile-divider"></div>
+    <!-- 安全設定 -->
+    <div class="profile-section">
+        <h3><i class="fa-solid fa-lock"></i> 安全設定</h3>
+        <form id="passwordForm" autocomplete="off">
+            <div class="profile-info-row">
+                <div class="profile-info-label">新密碼</div>
+                <input type="password" class="input-inline" id="newPwd" placeholder="請輸入新密碼">
+            </div>
+            <div class="profile-info-row">
+                <div class="profile-info-label">再次輸入</div>
+                <input type="password" class="input-inline" id="repeatPwd" placeholder="請再次輸入">
+            </div>
+            <button class="btn-edit" type="submit"><i class="fa-solid fa-floppy-disk"></i> 變更密碼</button>
+        </form>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="successToast" class="toast toast-success" style="display:none;">
+    <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
+    <div class="toast-content">
+        <div class="toast-title">操作成功</div>
+        <div class="toast-message">操作已成功完成！</div>
+    </div>
+    <button class="toast-close"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div id="errorToast" class="toast toast-error" style="display:none;">
+    <div class="toast-icon"><i class="fa-solid fa-xmark"></i></div>
+    <div class="toast-content">
+        <div class="toast-title">操作失敗</div>
+        <div class="toast-message">發生錯誤，請重試。</div>
+    </div>
+    <button class="toast-close"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<footer>
+    <div class="container">
+        <div class="footer-bottom">
+            &copy; 2025 NFT Exchange. 保留所有權利。
+        </div>
+    </div>
+</footer>
+<script>
+    // Toast
+    function showToast(toast, title, msg) {
+        toast.querySelector('.toast-title').textContent = title;
+        toast.querySelector('.toast-message').textContent = msg;
+        toast.style.display = "flex";
+        setTimeout(()=>toast.style.display="none", 2200);
+    }
+    document.querySelectorAll('.toast-close').forEach(btn=>{
+        btn.onclick = () => btn.closest('.toast').style.display = "none";
+    });
+
+    // Wallet 動態載入
+    const connectWalletBtn = document.getElementById('connectWalletBtn');
+    const connectedWallet = document.getElementById('connectedWallet');
+    const walletAddress = document.getElementById('walletAddress');
+    const profileWalletAddr = document.getElementById('profileWalletAddr');
+    const profileWalletStatus = document.getElementById('profileWalletStatus');
+    const profileWalletBalance = document.getElementById('profileWalletBalance');
+    const successToast = document.getElementById('successToast');
+    const errorToast = document.getElementById('errorToast');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 實際可串API載入
+        let account;
+        // wallet auto
+        if (window.ethereum) {
+            ethereum.request({method:'eth_accounts'}).then(accounts=>{
+                if(accounts.length>0) {
+                    account = accounts[0];
+                    walletAddress.textContent = account.slice(0,6)+'...'+account.slice(-4);
+                    connectWalletBtn.style.display='none';
+                    connectedWallet.style.display='flex';
+                    profileWalletAddr.textContent = account;
+                    profileWalletStatus.textContent = '已連接';
+                    getEthBalance(account);
+                }
+            });
+        }
+        connectWalletBtn.onclick = async function() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await ethereum.request({method:'eth_requestAccounts'});
+                    if(accounts.length>0) {
+                        account = accounts[0];
+                        walletAddress.textContent = account.slice(0,6)+'...'+account.slice(-4);
+                        connectWalletBtn.style.display='none';
+                        connectedWallet.style.display='flex';
+                        profileWalletAddr.textContent = account;
+                        profileWalletStatus.textContent = '已連接';
+                        getEthBalance(account);
+                        showToast(successToast,'錢包已連接','您的錢包已成功連接到平台');
+                    }
+                } catch(e) {
+                    showToast(errorToast,'連接失敗','請檢查MetaMask是否已登入');
+                }
+            } else {
+                showToast(errorToast,'未偵測到錢包','請安裝 MetaMask 或其他錢包擴充');
+            }
+        };
+        async function getEthBalance(addr) {
+            try {
+                if (!window.ethereum) return;
+                const provider = new window.ethers.providers.Web3Provider(window.ethereum);
+                const balance = await provider.getBalance(addr);
+                profileWalletBalance.textContent = (window.ethers.utils.formatEther(balance)||'0')+" ETH";
+            } catch (e) {
+                profileWalletBalance.textContent = '取得失敗';
+            }
+        }
+
+        // 編輯暱稱
+        const profileNickname = document.getElementById('profileNickname');
+        const editNicknameBtn = document.getElementById('editNicknameBtn');
+        editNicknameBtn.onclick = function() {
+            let curr = profileNickname.textContent;
+            const input = document.createElement('input');
+            input.type = "text";
+            input.className = "input-inline";
+            input.value = curr;
+            input.style.width = "130px";
+            input.onblur = function() {
+                if (input.value.trim() !== '') {
+                    profileNickname.textContent = input.value;
+                    showToast(successToast, '暱稱已修改', '您的暱稱已更新。');
+                }
+                editNicknameBtn.style.display = "";
+            };
+            profileNickname.textContent = '';
+            profileNickname.appendChild(input);
+            input.focus();
+            editNicknameBtn.style.display = "none";
+        };
+
+        // 密碼變更表單
+        document.getElementById('passwordForm').onsubmit = function(e) {
+            e.preventDefault();
+            let newPwd = document.getElementById('newPwd').value;
+            let repeatPwd = document.getElementById('repeatPwd').value;
+            if (!newPwd || newPwd.length < 6) {
+                showToast(errorToast, '密碼過短', '密碼長度需至少 6 碼');
+                return false;
+            }
+            if (newPwd !== repeatPwd) {
+                showToast(errorToast, '密碼不一致', '請確認密碼輸入一致');
+                return false;
+            }
+            showToast(successToast, '密碼已更新', '您的密碼已成功變更！');
+            document.getElementById('newPwd').value = '';
+            document.getElementById('repeatPwd').value = '';
+            return false;
+        };
+    });
+</script>
+<!-- ethers.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</body>
+</html>

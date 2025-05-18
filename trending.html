@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT 交易平台 - 熱門交易</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        #walletAddressShort { cursor:pointer; transition:background 0.15s; border-radius:5px; padding:2px 8px;}
+        #walletAddressShort:hover { background:#ece5ff; text-decoration:underline;}
+        #walletModal {
+            display: none; position: fixed; top: 90px; right: 40px; background: #fff;
+            border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            z-index: 9999; padding: 28px 32px; min-width: 340px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon"><i class="fa-solid fa-wallet"></i></div>
+            NFT Exchange
+        </a>
+        <div class="nav-wrapper">
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">首頁</a>
+                <a href="trending.html" class="nav-link active">熱門交易</a>
+                <a href="my-cards.html" class="nav-link">我的卡片</a>
+                <a href="my-fav.html" class="nav-link">我的收藏</a>
+                <a href="history.html" class="nav-link">交易歷史</a>
+                <a href="profile.html" class="nav-link">個人中心</a>
+            </nav>
+        </div>
+        <button id="connectWalletBtn" class="btn btn-primary">
+            <i class="fa-solid fa-wallet" style="margin-right: 8px;"></i>連接錢包
+        </button>
+        <div id="connectedWallet" style="display: none; color: var(--primary); font-weight: 500; font-size: 14px; align-items: center;">
+            <i class="fa-solid fa-circle-check" style="margin-right: 5px; color: var(--success);"></i>
+            <span id="walletAddressShort"><span id="walletAddress">0x1234...5678</span></span>
+        </div>
+    </div>
+</header>
+<div class="main-content">
+    <div class="container">
+        <h1 style="font-size: 28px; color: var(--dark); margin: 24px 0 24px 0;">🔥 熱門交易小卡</h1>
+        <!-- NFT 卡片區 -->
+        <div class="card-grid" id="cardGrid"></div>
+    </div>
+</div>
+<!-- Toast 訊息 -->
+<div id="successToast" class="toast toast-success" style="display:none;">
+    <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
+    <div class="toast-content">
+        <div class="toast-title">操作成功</div>
+        <div class="toast-message">操作已成功完成！</div>
+    </div>
+    <button class="toast-close"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div id="errorToast" class="toast toast-error" style="display:none;">
+    <div class="toast-icon"><i class="fa-solid fa-xmark"></i></div>
+    <div class="toast-content">
+        <div class="toast-title">操作失敗</div>
+        <div class="toast-message">發生錯誤，請重試。</div>
+    </div>
+    <button class="toast-close"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<!-- 錢包資訊 Modal -->
+<div id="walletModal">
+    <div style="font-size:16px; font-weight:bold; margin-bottom:12px;">我的錢包資訊</div>
+    <div><span>地址：</span><span id="modalAddress" style="font-family:monospace"></span></div>
+    <div style="margin:10px 0;">
+        <span>ETH 餘額：</span><span id="modalBalance">載入中...</span>
+    </div>
+    <div style="margin-bottom:14px;">
+        <span>最近交易（前5筆）：</span>
+        <ul id="modalTxList" style="font-size:13px; padding-left:20px; margin-top: 4px;"></ul>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <input type="text" id="sendTo" placeholder="收款地址" style="width:170px; font-size:13px; margin-bottom: 4px;">
+        <input type="number" id="sendAmount" placeholder="ETH" style="width:70px; font-size:13px;">
+        <button id="sendBtn" style="font-size:13px;">轉帳</button>
+    </div>
+    <button id="closeWalletModal" style="position:absolute;top:10px;right:18px; background:none; border:none; font-size:22px; color:#888; cursor:pointer;">×</button>
+</div>
+<footer>
+    <div class="container">
+        <div class="footer-bottom">
+            &copy; 2025 NFT Exchange. 保留所有權利。
+        </div>
+    </div>
+</footer>
+<script>
+    // 收藏資料儲存（localStorage）
+    function saveCollections(arr) {
+        localStorage.setItem('myCollections', JSON.stringify(arr));
+    }
+    function getCollections() {
+        return JSON.parse(localStorage.getItem('myCollections') || '[]');
+    }
+
+    // 熱門假資料（可接API）
+    const trendingCards = [
+        {
+            id: 10,
+            name: '偶像閃卡 #210',
+            img: 'https://images.unsplash.com/photo-1482062364825-616fd23b8fc1?w=500&q=80',
+            owner: 'FanMaster',
+            price: '1.12 ETH',
+            cardNo: '210'
+        },
+        {
+            id: 11,
+            name: '限定夢幻 #666',
+            img: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=500&q=80',
+            owner: 'RareCarder',
+            price: '2.04 ETH',
+            cardNo: '666'
+        },
+        {
+            id: 12,
+            name: '粉絲冠軍 #888',
+            img: 'https://images.unsplash.com/photo-1467934466021-f2425a1028b6?w=500&q=80',
+            owner: 'StarChaser',
+            price: '0.98 ETH',
+            cardNo: '888'
+        }
+    ];
+
+    function renderCards() {
+        let myCollections = getCollections();
+        const grid = document.getElementById('cardGrid');
+        grid.innerHTML = '';
+        trendingCards.forEach(card => {
+            const isFav = myCollections.find(c => c.id === card.id);
+            const el = document.createElement('div');
+            el.className = "nft-card";
+            el.innerHTML = `
+                <div class="card-image">
+                    <img src="${card.img}" alt="NFT Card Image">
+                </div>
+                <div class="card-content">
+                    <h3>${card.name}</h3>
+                    <div class="card-meta">卡號：${card.cardNo}　｜　擁有者：${card.owner}</div>
+                    <div class="card-meta">價格：<span style="color:#7e57c2;font-weight:bold;">${card.price}</span></div>
+                    <div class="card-actions">
+                        <button class="btn btn-primary btn-detail" data-id="${card.id}"><i class="fa-solid fa-circle-info"></i> 詳情</button>
+                        ${
+                            isFav
+                            ? `<button class="btn btn-fav btn-remove-fav" data-id="${card.id}"><i class="fa-solid fa-heart-crack"></i> 取消收藏</button>`
+                            : `<button class="btn btn-outline btn-add-fav" data-id="${card.id}"><i class="fa-regular fa-heart"></i> 收藏</button>`
+                        }
+                    </div>
+                </div>
+            `;
+            grid.appendChild(el);
+        });
+        // 綁定收藏/取消
+        document.querySelectorAll('.btn-add-fav').forEach(btn => {
+            btn.onclick = function() {
+                let myCollections = getCollections();
+                const id = parseInt(this.dataset.id);
+                const card = trendingCards.find(c => c.id === id);
+                if (card && !myCollections.find(c => c.id === id)) {
+                    myCollections.push(card);
+                    saveCollections(myCollections);
+                    renderCards();
+                    showToast(successToast, '已收藏', '成功收藏該卡片！');
+                }
+            }
+        });
+        document.querySelectorAll('.btn-remove-fav').forEach(btn => {
+            btn.onclick = function() {
+                let myCollections = getCollections();
+                const id = parseInt(this.dataset.id);
+                myCollections = myCollections.filter(c => c.id !== id);
+                saveCollections(myCollections);
+                renderCards();
+                showToast(successToast, '已取消收藏', '已從收藏清單移除該卡片！');
+            }
+        });
+        // 詳情跳轉
+        document.querySelectorAll('.btn-detail').forEach(btn => {
+            btn.onclick = function() {
+                window.location.href = `details.html?id=${this.dataset.id}`;
+            }
+        });
+    }
+    function showToast(toast, title, message) {
+        toast.querySelector('.toast-title').textContent = title;
+        toast.querySelector('.toast-message').textContent = message;
+        toast.style.display = "flex";
+        setTimeout(() => { toast.style.display = "none"; }, 2200);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        renderCards();
+
+        // Toast 關閉
+        document.querySelectorAll('.toast-close').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.toast').style.display = "none";
+            });
+        });
+
+        // ====== 錢包區塊 ======
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        const connectedWallet = document.getElementById('connectedWallet');
+        const walletAddress = document.getElementById('walletAddress');
+        const walletAddressShort = document.getElementById('walletAddressShort');
+        const successToast = document.getElementById('successToast');
+        const errorToast = document.getElementById('errorToast');
+        const walletModal = document.getElementById('walletModal');
+        const modalAddress = document.getElementById('modalAddress');
+        const modalBalance = document.getElementById('modalBalance');
+        const modalTxList = document.getElementById('modalTxList');
+        const sendBtn = document.getElementById('sendBtn');
+        const sendTo = document.getElementById('sendTo');
+        const sendAmount = document.getElementById('sendAmount');
+        const closeWalletModal = document.getElementById('closeWalletModal');
+        const etherscanApiKey = '6YW54UYMMFRE4ZYYWDJ6KRVKZU7ZBDK16C'; // 測試用
+
+        // 自動錢包顯示
+        if (typeof window.ethereum !== 'undefined') {
+            window.ethereum.request({ method: 'eth_accounts' })
+                .then(accounts => {
+                    if (accounts.length > 0) {
+                        const shortenedAddress = accounts[0].slice(0, 6) + '...' + accounts[0].slice(-4);
+                        walletAddress.textContent = shortenedAddress;
+                        connectWalletBtn.style.display = 'none';
+                        connectedWallet.style.display = 'flex';
+                    } else {
+                        connectWalletBtn.style.display = 'block';
+                        connectedWallet.style.display = 'none';
+                    }
+                });
+        } else {
+            connectWalletBtn.style.display = 'block';
+            connectedWallet.style.display = 'none';
+        }
+
+        connectWalletBtn.addEventListener('click', async function() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    if (accounts.length > 0) {
+                        const shortenedAddress = accounts[0].slice(0, 6) + '...' + accounts[0].slice(-4);
+                        walletAddress.textContent = shortenedAddress;
+                        connectWalletBtn.style.display = 'none';
+                        connectedWallet.style.display = 'flex';
+                        showToast(successToast, '錢包已連接', '您的錢包已成功連接到平台！');
+                    }
+                } catch (error) {
+                    showToast(errorToast, '連接失敗', '無法連接到錢包，請確保您已安裝 MetaMask 並已登入。');
+                }
+            } else {
+                showToast(errorToast, '未偵測到錢包', '請安裝 MetaMask 或其他以太坊錢包擴充功能。');
+            }
+        });
+
+        // 錢包序號顯示modal
+        walletAddressShort.addEventListener('click', async function() {
+            if (!window.ethereum || !window.ethereum.selectedAddress) {
+                showToast(errorToast, '請先連接錢包', '請先連接錢包再查看詳情');
+                return;
+            }
+            const addr = window.ethereum.selectedAddress;
+            modalAddress.textContent = addr;
+            walletModal.style.display = "block";
+            modalBalance.textContent = '載入中...';
+            modalTxList.innerHTML = '<li>載入中...</li>';
+            // 查餘額
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const balance = await provider.getBalance(addr);
+                modalBalance.textContent = ethers.utils.formatEther(balance) + " ETH";
+            } catch (e) {
+                modalBalance.textContent = '取得失敗';
+            }
+            // 查最近交易（前5筆）
+            try {
+                const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${addr}&sort=desc&apikey=${etherscanApiKey}`;
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+                modalTxList.innerHTML = '';
+                if (data.result && data.result.length > 0) {
+                    data.result.slice(0,5).forEach(tx=>{
+                        const li = document.createElement('li');
+                        li.innerHTML = `TxHash: <a href="https://etherscan.io/tx/${tx.hash}" target="_blank">${tx.hash.slice(0,10)}...</a> <br> Value: ${ethers.utils.formatEther(tx.value)} ETH`;
+                        modalTxList.appendChild(li);
+                    });
+                } else {
+                    modalTxList.innerHTML = '<li>暫無紀錄</li>';
+                }
+            } catch (e) {
+                modalTxList.innerHTML = '<li>載入失敗</li>';
+            }
+        });
+        closeWalletModal.addEventListener('click', function(){
+            walletModal.style.display = 'none';
+        });
+
+        sendBtn.addEventListener('click', async function() {
+            if (!window.ethereum || !window.ethereum.selectedAddress) {
+                alert('請先連接錢包');
+                return;
+            }
+            const to = sendTo.value;
+            const value = sendAmount.value;
+            if (!to || !value) {
+                alert('請輸入對方地址和金額');
+                return;
+            }
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const tx = await signer.sendTransaction({
+                    to,
+                    value: ethers.utils.parseEther(value)
+                });
+                alert('送出成功，TxHash：' + tx.hash);
+            } catch(e) {
+                alert('轉帳失敗：' + (e.data?.message || e.message));
+            }
+        });
+    });
+</script>
+</body>
+</html>
