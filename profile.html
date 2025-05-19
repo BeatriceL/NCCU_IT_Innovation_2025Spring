@@ -63,6 +63,23 @@
         .profile-divider {
             border-top: 1px solid #eee; margin: 22px 0 18px 0;
         }
+        .logout-btn {
+            margin-left: 16px;
+            background: #fff;
+            border: 1.5px solid #7e57c2;
+            color: #7e57c2;
+            padding: 6px 20px;
+            border-radius: 7px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.18s, color 0.18s;
+        }
+        .logout-btn:hover {
+            background: #f3eafe;
+            color: #512da8;
+            border-color: #512da8;
+        }
     </style>
 </head>
 <body>
@@ -83,9 +100,11 @@
         <button id="connectWalletBtn" class="btn btn-primary">
             <i class="fa-solid fa-wallet" style="margin-right: 8px;"></i>連接錢包
         </button>
-        <div id="connectedWallet" style="display: none; color: var(--primary); font-weight: 500; font-size: 14px;">
+        <div id="connectedWallet" style="display: none; align-items:center; color: var(--primary); font-weight: 500; font-size: 14px;">
             <i class="fa-solid fa-circle-check" style="margin-right: 5px; color: var(--success);"></i>
             <span id="walletAddress">0x1234...5678</span>
+            <!-- 登出按鈕 -->
+            <button id="logoutBtn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> 登出</button>
         </div>
     </div>
 </header>
@@ -189,11 +208,11 @@
     const profileWalletBalance = document.getElementById('profileWalletBalance');
     const successToast = document.getElementById('successToast');
     const errorToast = document.getElementById('errorToast');
+    const logoutBtn = document.getElementById('logoutBtn'); // 登出按鈕
 
     document.addEventListener('DOMContentLoaded', function() {
-        // 實際可串API載入
         let account;
-        // wallet auto
+        // 自動檢查錢包狀態
         if (window.ethereum) {
             ethereum.request({method:'eth_accounts'}).then(accounts=>{
                 if(accounts.length>0) {
@@ -238,6 +257,23 @@
                 profileWalletBalance.textContent = '取得失敗';
             }
         }
+
+        // 登出按鈕
+        logoutBtn.onclick = function() {
+            // 邏輯：顯示未連接狀態+跳轉
+            // 清除所有前端錢包顯示
+            walletAddress.textContent = '';
+            profileWalletAddr.textContent = '尚未連接';
+            profileWalletStatus.textContent = '';
+            profileWalletBalance.textContent = '-';
+            connectWalletBtn.style.display = '';
+            connectedWallet.style.display = 'none';
+            // 可以加這一行讓MetaMask斷開連線（僅前端UI，MetaMask本身不支援"強制登出"）
+            // ethereum.request({ method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] });
+            setTimeout(function() {
+                window.location.href = "metamask-connect-page.html";
+            }, 300);
+        };
 
         // 編輯暱稱
         const profileNickname = document.getElementById('profileNickname');

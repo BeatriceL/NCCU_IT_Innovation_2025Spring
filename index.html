@@ -3,17 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NFT 交易平台 - 首頁</title>
+    <title>NFT 小卡交易平台</title>
     <link rel="stylesheet" href="css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
+        .container { max-width: 1120px; margin: 0 auto; padding: 30px 16px 60px 16px; }
+        .main-content { min-height: 80vh; }
+        .filter-bar { display: flex; gap: 18px; align-items: center; margin-bottom: 22px;}
+        .filter-bar label { font-weight: 500; color: #6b4caf;}
+        .filter-bar select, .filter-bar input[type="text"] { border: 1px solid #b39ddb; border-radius: 6px; font-size: 15px; padding: 4px 10px;}
+        .filter-bar input[type="text"] { width: 190px; }
+        .group-section { margin-bottom: 40px; }
+        .group-title-row { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+        .group-title { font-size: 22px; color: #6b4caf; font-weight: bold; }
+        .group-sort { margin-left: auto; }
+        .card-grid { display: flex; flex-wrap: wrap; gap: 22px; }
+        .nft-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 1.5px 9px #e0e0e045;
+            padding: 22px 18px;
+            min-width: 220px;
+            max-width: 240px;
+            flex: 1 0 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nft-card img { width: 110px; height: 110px; border-radius: 8px; margin-bottom: 14px; object-fit: cover; }
+        .nft-card h3 { font-size: 16px; font-weight: bold; color: #7e57c2; margin-bottom: 6px; }
+        .nft-card .card-meta { font-size: 13px; color: #555; margin-bottom: 3px; }
+        .nft-card .card-actions { margin-top: 7px; display: flex; gap: 7px; flex-wrap: wrap; }
+        .btn { padding: 4px 13px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; }
+        .btn-primary { background: linear-gradient(135deg, #9575cd, #7e57c2); color: #fff; }
+        .btn-primary:hover { background: linear-gradient(135deg, #b39ddb, #7e57c2); }
+        .btn-success { background: #5dd495; color: #fff; }
+        .btn-success:hover { background: #48b980; }
+        .btn-outline { background: #fff; color: #7e57c2; border: 1.3px solid #b39ddb; }
+        .btn-outline:hover { background: #f7f3ff; }
+        .btn-fav { background: #fff3f6; color: #d32f2f; border: 1.3px solid #ffb8c6; }
+        .btn-fav:hover { background: #ffe6ee; }
+        .logout-btn {
+            margin-left: 16px;
+            background: #fff;
+            border: 1.5px solid #7e57c2;
+            color: #7e57c2;
+            padding: 6px 20px;
+            border-radius: 7px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.18s, color 0.18s;
+        }
+        .logout-btn:hover {
+            background: #f3eafe;
+            color: #512da8;
+            border-color: #512da8;
+        }
         #walletAddressShort { cursor:pointer; transition:background 0.15s; border-radius:5px; padding:2px 8px;}
         #walletAddressShort:hover { background:#ece5ff; text-decoration:underline;}
         #walletModal {
             display: none; position: fixed; top: 90px; right: 40px; background: #fff;
             border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             z-index: 9999; padding: 28px 32px; min-width: 340px;
+        }
+        .sort-select { border-radius: 5px; border: 1px solid #b39ddb; font-size: 14px; padding: 2px 7px;}
+        @media (max-width: 800px) {
+            .card-grid { flex-direction: column; gap:16px;}
+            .nft-card { max-width: 100%; min-width: 0; }
         }
     </style>
 </head>
@@ -24,33 +82,44 @@
             <div class="logo-icon"><i class="fa-solid fa-wallet"></i></div>
             NFT Exchange
         </a>
-        <div class="nav-wrapper">
-            <nav class="main-nav">
-                <a href="index.html" class="nav-link active">首頁</a>
-                <a href="trending.html" class="nav-link">熱門交易</a>
-                <a href="my-cards.html" class="nav-link">我的卡片</a>
-                <a href="my-fav.html" class="nav-link">我的收藏</a>
-                <a href="history.html" class="nav-link">交易歷史</a>
-                <a href="profile.html" class="nav-link">個人中心</a>
-            </nav>
-        </div>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link active">首頁</a>
+            <a href="trending.html" class="nav-link">熱門交易</a>
+            <a href="my-cards.html" class="nav-link">我的卡片</a>
+            <a href="mycollection.html" class="nav-link">我的收藏</a>
+            <a href="history.html" class="nav-link">交易歷史</a>
+            <a href="profile.html" class="nav-link">個人中心</a>
+        </nav>
         <button id="connectWalletBtn" class="btn btn-primary">
             <i class="fa-solid fa-wallet" style="margin-right: 8px;"></i>連接錢包
         </button>
         <div id="connectedWallet" style="display: none; color: var(--primary); font-weight: 500; font-size: 14px; align-items: center;">
             <i class="fa-solid fa-circle-check" style="margin-right: 5px; color: var(--success);"></i>
             <span id="walletAddressShort"><span id="walletAddress">0x1234...5678</span></span>
+            <button id="logoutBtn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> 登出</button>
         </div>
     </div>
 </header>
 <div class="main-content">
     <div class="container">
-        <h1 style="font-size: 28px; color: var(--dark); margin: 24px 0 24px 0;">熱門 NFT 卡片</h1>
-        <!-- NFT 卡片區 -->
-        <div class="card-grid" id="cardGrid"></div>
+        <div class="title-bar" style="margin-bottom: 16px;">
+            <h1><i class="fa-solid fa-id-card"></i> NFT 韓國IDOL小卡平台</h1>
+        </div>
+        <!-- 主篩選列 -->
+        <div class="filter-bar">
+            <label for="filterType">團體類型：</label>
+            <select id="filterType">
+                <option value="">全部</option>
+                <option value="男團">男團</option>
+                <option value="女團">女團</option>
+            </select>
+            <label for="searchBox">搜尋團體/成員：</label>
+            <input type="text" id="searchBox" placeholder="輸入團體/成員">
+        </div>
+        <div id="groupsZone"></div>
     </div>
 </div>
-<!-- Toast 訊息 -->
+<!-- Toast、Modal、Footer 省略不變 -->
 <div id="successToast" class="toast toast-success" style="display:none;">
     <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
     <div class="toast-content">
@@ -67,7 +136,6 @@
     </div>
     <button class="toast-close"><i class="fa-solid fa-xmark"></i></button>
 </div>
-<!-- 錢包資訊 Modal -->
 <div id="walletModal">
     <div style="font-size:16px; font-weight:bold; margin-bottom:12px;">我的錢包資訊</div>
     <div><span>地址：</span><span id="modalAddress" style="font-family:monospace"></span></div>
@@ -93,7 +161,7 @@
     </div>
 </footer>
 <script>
-    // === 收藏資料儲存（localStorage） ===
+    // ==== 收藏資料儲存（localStorage） ====
     function saveCollections(arr) {
         localStorage.setItem('myCollections', JSON.stringify(arr));
     }
@@ -101,114 +169,242 @@
         return JSON.parse(localStorage.getItem('myCollections') || '[]');
     }
 
-    // 假資料
+    // ==== 假資料（10張，男團/女團、團員名、真卡照片）====
     const allCards = [
+        // 男團
         {
-            id: 1,
-            name: '極光幻想 #001',
-            img: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=500&q=80',
-            owner: 'CryptoKing',
-            price: '0.45 ETH',
-            cardNo: '001'
+            id: 1, group: 'BTS', groupType: '男團', member: 'V',
+            name: 'V - BTS 2023 FANMEETING',
+            img: 'https://i.imgur.com/lZ5kHTJ.jpg',
+            price: 0.48, owner: 'kpopfan101', cardNo: 'BTS-001', listedAt: '2024-05-11'
         },
         {
-            id: 2,
-            name: '數字星塵 #042',
-            img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&q=80',
-            owner: 'MetaCollector',
-            price: '0.82 ETH',
-            cardNo: '042'
+            id: 2, group: 'BTS', groupType: '男團', member: 'JUNGKOOK',
+            name: 'JUNGKOOK - BTS DICON',
+            img: 'https://i.imgur.com/fFzF5l1.jpg',
+            price: 1.3, owner: 'jkfan', cardNo: 'BTS-013', listedAt: '2024-05-18'
         },
         {
-            id: 3,
-            name: '虛擬山水 #128',
-            img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?w=500&q=80',
-            owner: 'BlockchainArtist',
-            price: '0.28 ETH',
-            cardNo: '128'
+            id: 3, group: 'SEVENTEEN', groupType: '男團', member: 'MINGYU',
+            name: 'MINGYU - SEVENTEEN Follow',
+            img: 'https://i.imgur.com/YpJMLu9.jpg',
+            price: 0.73, owner: 'caratuser', cardNo: 'SVT-033', listedAt: '2024-05-12'
+        },
+        {
+            id: 4, group: 'Stray Kids', groupType: '男團', member: 'HYUNJIN',
+            name: 'HYUNJIN - Stray Kids MANIAC',
+            img: 'https://i.imgur.com/DGTIMOF.jpg',
+            price: 0.65, owner: 'stay123', cardNo: 'SKZ-018', listedAt: '2024-05-19'
+        },
+        // 女團
+        {
+            id: 5, group: 'BLACKPINK', groupType: '女團', member: 'JENNIE',
+            name: 'JENNIE - BLACKPINK Pink Venom',
+            img: 'https://i.imgur.com/kYKsNta.jpg',
+            price: 1.2, owner: 'blinkstar', cardNo: 'BP-021', listedAt: '2024-05-15'
+        },
+        {
+            id: 6, group: 'TWICE', groupType: '女團', member: 'TZUYU',
+            name: 'TZUYU - TWICE Ready To Be',
+            img: 'https://i.imgur.com/l8clBVe.jpg',
+            price: 0.39, owner: 'once_love', cardNo: 'TW-009', listedAt: '2024-05-18'
+        },
+        {
+            id: 7, group: 'IVE', groupType: '女團', member: 'WONYOUNG',
+            name: 'WONYOUNG - IVE Switch',
+            img: 'https://i.imgur.com/4dXyHBa.jpg',
+            price: 0.22, owner: 'diveuser', cardNo: 'IVE-007', listedAt: '2024-05-19'
+        },
+        {
+            id: 8, group: 'NewJeans', groupType: '女團', member: 'MINJI',
+            name: 'MINJI - NewJeans OMG',
+            img: 'https://i.imgur.com/h26PHzN.jpg',
+            price: 0.44, owner: 'bunnies22', cardNo: 'NJ-003', listedAt: '2024-05-17'
+        },
+        {
+            id: 9, group: 'LE SSERAFIM', groupType: '女團', member: 'SAKURA',
+            name: 'SAKURA - LE SSERAFIM EASY',
+            img: 'https://i.imgur.com/M61ZEra.jpg',
+            price: 0.52, owner: 'fearnot_17', cardNo: 'LSF-005', listedAt: '2024-05-16'
+        },
+        {
+            id: 10, group: 'Red Velvet', groupType: '女團', member: 'IRENE',
+            name: 'IRENE - Red Velvet Birthday',
+            img: 'https://i.imgur.com/yN1pEww.jpg',
+            price: 0.75, owner: 'reveluvfan', cardNo: 'RV-010', listedAt: '2024-05-14'
         }
     ];
 
-    function renderCards() {
+    // 分團
+    function getAllGroups(data) {
+        const dict = {};
+        data.forEach(card => {
+            if (!dict[card.group]) {
+                dict[card.group] = { groupType: card.groupType, cards: [] };
+            }
+            dict[card.group].cards.push(card);
+        });
+        return dict;
+    }
+
+    function renderGroups() {
         let myCollections = getCollections();
-        const grid = document.getElementById('cardGrid');
-        grid.innerHTML = '';
-        allCards.forEach(card => {
-            const isFav = myCollections.find(c => c.id === card.id);
-            const el = document.createElement('div');
-            el.className = "nft-card";
-            el.innerHTML = `
-                <div class="card-image">
-                    <img src="${card.img}" alt="NFT Card Image">
-                </div>
-                <div class="card-content">
-                    <h3>${card.name}</h3>
-                    <div class="card-meta">卡號：${card.cardNo}　｜　擁有者：${card.owner}</div>
-                    <div class="card-meta">價格：<span style="color:#7e57c2;font-weight:bold;">${card.price}</span></div>
-                    <div class="card-actions">
-                        <button class="btn btn-primary btn-detail" data-id="${card.id}"><i class="fa-solid fa-circle-info"></i> 詳情</button>
-                        ${
-                            isFav
-                            ? `<button class="btn btn-fav btn-remove-fav" data-id="${card.id}"><i class="fa-solid fa-heart-crack"></i> 取消收藏</button>`
-                            : `<button class="btn btn-outline btn-add-fav" data-id="${card.id}"><i class="fa-regular fa-heart"></i> 收藏</button>`
-                        }
+        const filterType = document.getElementById('filterType').value.trim();
+        const searchText = document.getElementById('searchBox').value.trim().toLowerCase();
+        // 篩選
+        let filtered = allCards.filter(c => {
+            let ok = true;
+            if (filterType && c.groupType !== filterType) ok = false;
+            if (searchText) {
+                const kw = `${c.group}${c.member}${c.name}`.toLowerCase();
+                if (!kw.includes(searchText)) ok = false;
+            }
+            return ok;
+        });
+        // 區塊
+        let groupDict = getAllGroups(filtered);
+        const groupsZone = document.getElementById('groupsZone');
+        groupsZone.innerHTML = '';
+        let groupNames = Object.keys(groupDict);
+        if (groupNames.length === 0) {
+            groupsZone.innerHTML = `<div style="color:#999; margin-top:50px;">查無符合條件的小卡</div>`;
+            return;
+        }
+        groupNames.forEach(groupName => {
+            const group = groupDict[groupName];
+            let sortKey = 'listedAt';
+            let sortOrder = 'desc'; // 預設新到舊
+            const sortId = `sort_${groupName.replace(/[^a-zA-Z0-9]/g, '')}`;
+            const groupSec = document.createElement('section');
+            groupSec.className = 'group-section';
+            groupSec.innerHTML = `
+                <div class="group-title-row">
+                    <span class="group-title">${groupName} <span style="font-size:14px;color:#8d75bc;">(${group.groupType})</span></span>
+                    <div class="group-sort">
+                        <label for="${sortId}">排序：</label>
+                        <select class="sort-select" id="${sortId}">
+                            <option value="listedAt_desc">上架新到舊</option>
+                            <option value="listedAt_asc">上架舊到新</option>
+                            <option value="price_asc">價位低到高</option>
+                            <option value="price_desc">價位高到低</option>
+                        </select>
                     </div>
                 </div>
+                <div class="card-grid"></div>
             `;
-            grid.appendChild(el);
-        });
-        // 綁定收藏/取消
-        document.querySelectorAll('.btn-add-fav').forEach(btn => {
-            btn.onclick = function() {
-                let myCollections = getCollections();
-                const id = parseInt(this.dataset.id);
-                const card = allCards.find(c => c.id === id);
-                if (card && !myCollections.find(c => c.id === id)) {
-                    myCollections.push(card);
-                    saveCollections(myCollections);
-                    renderCards();
-                    showToast(successToast, '已收藏', '成功收藏該卡片！');
+            groupsZone.appendChild(groupSec);
+
+            function renderCardsInGroup(cards, sortBy = 'listedAt', order = 'desc') {
+                const grid = groupSec.querySelector('.card-grid');
+                let sorted = [...cards];
+                sorted.sort((a, b) => {
+                    if (sortBy === 'price') {
+                        return order === 'asc' ? a.price - b.price : b.price - a.price;
+                    } else {
+                        let aTime = new Date(a.listedAt).getTime();
+                        let bTime = new Date(b.listedAt).getTime();
+                        return order === 'asc' ? aTime - bTime : bTime - aTime;
+                    }
+                });
+                grid.innerHTML = '';
+                sorted.forEach(card => {
+                    const isFav = myCollections.find(c => c.id === card.id);
+                    const el = document.createElement('div');
+                    el.className = "nft-card";
+                    el.innerHTML = `
+                        <div class="card-image">
+                            <img src="${card.img}" alt="NFT Card Image">
+                        </div>
+                        <div class="card-content">
+                            <h3>${card.name}</h3>
+                            <div class="card-meta">成員：${card.member}</div>
+                            <div class="card-meta">卡號：${card.cardNo}</div>
+                            <div class="card-meta">持有人：${card.owner}</div>
+                            <div class="card-meta">價位：<span style="color:#7e57c2;font-weight:bold;">${card.price} ETH</span></div>
+                            <div class="card-meta">上架：${card.listedAt}</div>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-detail" data-id="${card.id}"><i class="fa-solid fa-circle-info"></i> 詳情</button>
+                                <button class="btn btn-success btn-trade" data-id="${card.id}"><i class="fa-solid fa-right-left"></i> 交易</button>
+                                ${
+                                    isFav
+                                    ? `<button class="btn btn-fav btn-remove-fav" data-id="${card.id}"><i class="fa-solid fa-heart-crack"></i> 取消收藏</button>`
+                                    : `<button class="btn btn-outline btn-add-fav" data-id="${card.id}"><i class="fa-regular fa-heart"></i> 收藏</button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(el);
+                });
+                grid.querySelectorAll('.btn-add-fav').forEach(btn => {
+                    btn.onclick = function() {
+                        let myCollections = getCollections();
+                        const id = parseInt(this.dataset.id);
+                        const card = allCards.find(c => c.id === id);
+                        if (card && !myCollections.find(c => c.id === id)) {
+                            myCollections.push(card);
+                            saveCollections(myCollections);
+                            renderGroups();
+                            showToast(successToast, '已收藏', '成功收藏該小卡！');
+                        }
+                    }
+                });
+                grid.querySelectorAll('.btn-remove-fav').forEach(btn => {
+                    btn.onclick = function() {
+                        let myCollections = getCollections();
+                        const id = parseInt(this.dataset.id);
+                        myCollections = myCollections.filter(c => c.id !== id);
+                        saveCollections(myCollections);
+                        renderGroups();
+                        showToast(successToast, '已取消收藏', '已從收藏清單移除該小卡！');
+                    }
+                });
+                grid.querySelectorAll('.btn-detail').forEach(btn => {
+                    btn.onclick = function() {
+                        window.location.href = `details.html?id=${this.dataset.id}`;
+                    }
+                });
+                grid.querySelectorAll('.btn-trade').forEach(btn => {
+                    btn.onclick = function() {
+                        window.location.href = `transaction.html?id=${this.dataset.id}`;
+                    }
+                });
+            }
+            renderCardsInGroup(group.cards);
+
+            const sortSelect = groupSec.querySelector(`#${sortId}`);
+            sortSelect.onchange = function() {
+                const val = sortSelect.value;
+                if (val.startsWith('price')) {
+                    renderCardsInGroup(group.cards, 'price', val.endsWith('asc') ? 'asc' : 'desc');
+                } else {
+                    renderCardsInGroup(group.cards, 'listedAt', val.endsWith('asc') ? 'asc' : 'desc');
                 }
             }
         });
-        document.querySelectorAll('.btn-remove-fav').forEach(btn => {
-            btn.onclick = function() {
-                let myCollections = getCollections();
-                const id = parseInt(this.dataset.id);
-                myCollections = myCollections.filter(c => c.id !== id);
-                saveCollections(myCollections);
-                renderCards();
-                showToast(successToast, '已取消收藏', '已從收藏清單移除該卡片！');
-            }
-        });
-        // 詳情跳轉
-        document.querySelectorAll('.btn-detail').forEach(btn => {
-            btn.onclick = function() {
-                window.location.href = `details.html?id=${this.dataset.id}`;
-            }
-        });
     }
+
     function showToast(toast, title, message) {
         toast.querySelector('.toast-title').textContent = title;
         toast.querySelector('.toast-message').textContent = message;
         toast.style.display = "flex";
         setTimeout(() => { toast.style.display = "none"; }, 2200);
     }
-    document.addEventListener('DOMContentLoaded', function() {
-        renderCards();
 
-        // Toast 關閉
+    document.addEventListener('DOMContentLoaded', function() {
+        renderGroups();
+        document.getElementById('filterType').onchange = renderGroups;
+        document.getElementById('searchBox').oninput = renderGroups;
         document.querySelectorAll('.toast-close').forEach(btn => {
             btn.addEventListener('click', function() {
                 this.closest('.toast').style.display = "none";
             });
         });
-
-        // ====== 錢包區塊 ======
+        // ====== 錢包、modal、登出區塊同前，省略不動 ======
         const connectWalletBtn = document.getElementById('connectWalletBtn');
         const connectedWallet = document.getElementById('connectedWallet');
         const walletAddress = document.getElementById('walletAddress');
         const walletAddressShort = document.getElementById('walletAddressShort');
+        const logoutBtn = document.getElementById('logoutBtn');
         const successToast = document.getElementById('successToast');
         const errorToast = document.getElementById('errorToast');
         const walletModal = document.getElementById('walletModal');
@@ -219,9 +415,8 @@
         const sendTo = document.getElementById('sendTo');
         const sendAmount = document.getElementById('sendAmount');
         const closeWalletModal = document.getElementById('closeWalletModal');
-        const etherscanApiKey = '6YW54UYMMFRE4ZYYWDJ6KRVKZU7ZBDK16C'; // 測試用
+        const etherscanApiKey = '6YW54UYMMFRE4ZYYWDJ6KRVKZU7ZBDK16C';
 
-        // 自動錢包顯示
         if (typeof window.ethereum !== 'undefined') {
             window.ethereum.request({ method: 'eth_accounts' })
                 .then(accounts => {
@@ -259,7 +454,15 @@
             }
         });
 
-        // 錢包序號顯示modal
+        logoutBtn.addEventListener('click', function() {
+            walletAddress.textContent = '';
+            connectWalletBtn.style.display = '';
+            connectedWallet.style.display = 'none';
+            setTimeout(function() {
+                window.location.href = "metamask-connect-page.html";
+            }, 300);
+        });
+
         walletAddressShort.addEventListener('click', async function() {
             if (!window.ethereum || !window.ethereum.selectedAddress) {
                 showToast(errorToast, '請先連接錢包', '請先連接錢包再查看詳情');
@@ -270,7 +473,6 @@
             walletModal.style.display = "block";
             modalBalance.textContent = '載入中...';
             modalTxList.innerHTML = '<li>載入中...</li>';
-            // 查餘額
             try {
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const balance = await provider.getBalance(addr);
@@ -278,7 +480,6 @@
             } catch (e) {
                 modalBalance.textContent = '取得失敗';
             }
-            // 查最近交易（前5筆）
             try {
                 const apiUrl = `https://api.etherscan.io/api?module=account&action=txlist&address=${addr}&sort=desc&apikey=${etherscanApiKey}`;
                 const res = await fetch(apiUrl);
