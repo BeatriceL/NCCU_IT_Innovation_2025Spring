@@ -1,0 +1,468 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ICardManager",
+  "sourceName": "contracts/IdolCardSystem.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        }
+      ],
+      "name": "approveTransfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "bindUID",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        }
+      ],
+      "name": "cancelResale",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getAvailableCards",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "uid",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idolGroup",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "member",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "cardNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "listPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "photoURI",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isSold",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CardDisplay[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCardPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCompanyCards",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "uid",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idolGroup",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "member",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "cardNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "listPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "photoURI",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isSold",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CardDisplay[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        }
+      ],
+      "name": "getNFTHolder",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPendingCardRequests",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "uid",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "buyer",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct PendingRequest[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getResaleCards",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "uid",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idolGroup",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "member",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "cardNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "listPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "photoURI",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isSold",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CardDisplay[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "getUserCards",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "uid",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "idolGroup",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "member",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "cardNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "listPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "photoURI",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isSold",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CardDisplay[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        }
+      ],
+      "name": "listCardForResale",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "purchaseResaleCard",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "purchaseSpecificCard",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        }
+      ],
+      "name": "rejectTransfer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "uid",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        }
+      ],
+      "name": "requestCard",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "idolGroup",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "member",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "cardNumber",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "listPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "photoURI",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "setCardPrice",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
